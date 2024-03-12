@@ -70,13 +70,7 @@ prompt = load_prompt()
 def load_chat_model():
     # parameters for ollama see: https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.ollama.ChatOllama.html
     # num_ctx is the context window size
-
-    # In case you host ollama not on the same machine as this chatbot you can specify the rest endpoint of ollama like this
-    # ollama binds per default just to localhost; in order to bind ollama to any interface of the host you need to specify
-    # ollamo_host: https://github.com/ollama/ollama/blob/main/docs/faq.md#setting-environment-variables-on-linux
-    # return ChatOllama(model="mistral:latest", num_ctx=18192, base_url="http://3.253.55.214:11434")
-
-    return ChatOllama(model="mistral:latest", num_ctx=18192)
+    return ChatOllama(model="mistral:latest", num_ctx=18192, base_url=st.secrets['OLLAMA_ENDPOINT'])
 chat_model = load_chat_model()
 
 # Cache the DataStax Enterprise Vector Store for future runs
