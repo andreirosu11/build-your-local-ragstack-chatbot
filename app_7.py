@@ -2,9 +2,10 @@ import streamlit as st
 import os
 import tempfile
 
-from langchain_openai import OpenAIEmbeddings
-from langchain_openai import ChatOpenAI
-from langchain_community.vectorstores import AstraDB
+from cassandra.cluster import Cluster
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.chat_models.ollama import ChatOllama
+from langchain_community.vectorstores import Cassandra
 from langchain.schema.runnable import RunnableMap
 from langchain.prompts import ChatPromptTemplate
 from langchain.callbacks.base import BaseCallbackHandler
@@ -21,7 +22,7 @@ class StreamHandler(BaseCallbackHandler):
         self.text += token
         self.container.markdown(self.text + "▌")
 
-# Function for Vectorizing uploaded data into Astra DB
+# Function for Vectorizing uploaded data into DataStax Enterprise
 def vectorize_text(uploaded_file, vector_store):
     if uploaded_file is not None:
         
@@ -43,7 +44,7 @@ def vectorize_text(uploaded_file, vector_store):
             chunk_overlap  = 100
         )
 
-        # Vectorize the PDF and load it into the Astra DB Vector Store
+        # Vectorize the PDF and load it into the DataStax Enterprise Vector Store
         pages = text_splitter.split_documents(docs)
         vector_store.add_documents(pages)  
         st.info(f"{len(pages)} pages loaded.")
@@ -67,23 +68,30 @@ prompt = load_prompt()
 # Cache OpenAI Chat Model for future runs
 @st.cache_resource()
 def load_chat_model():
-    return ChatOpenAI(
-        temperature=0.3,
-        model='gpt-3.5-turbo',
-        streaming=True,
-        verbose=True
-    )
+    # parameters for ollama see: https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.ollama.ChatOllama.html
+    # num_ctx is the context window size
+
+    # In case you host ollama not on the same machine as this chatbot you can specify the rest endpoint of ollama like this
+    # ollama binds per default just to localhost; in order to bind ollama to any interface of the host you need to specify
+    # ollamo_host: https://github.com/ollama/ollama/blob/main/docs/faq.md#setting-environment-variables-on-linux
+    # return ChatOllama(model="mistral:latest", num_ctx=18192, base_url="http://3.253.55.214:11434")
+
+    return ChatOllama(model="mistral:latest", num_ctx=18192)
 chat_model = load_chat_model()
 
-# Cache the Astra DB Vector Store for future runs
-@st.cache_resource(show_spinner='Connecting to Astra')
+# Cache the DataStax Enterprise Vector Store for future runs
+@st.cache_resource(show_spinner='Connecting to Datastax Enterprise v7 with Vector Support')
 def load_vector_store():
+    # Connect to DSE
+    cluster = Cluster([st.secrets['DSE_ENDPOINT']])
+    session = cluster.connect()
+
     # Connect to the Vector Store
-    vector_store = AstraDB(
-        embedding=OpenAIEmbeddings(),
-        collection_name="my_store",
-        api_endpoint=st.secrets['ASTRA_API_ENDPOINT'],
-        token=st.secrets['ASTRA_TOKEN']
+    vector_store = Cassandra(
+        session=session,
+        embedding=HuggingFaceEmbeddings(),
+        keyspace=st.secrets['DSE_KEYSPACE'],
+        table_name=st.secrets['DSE_TABLE']
     )
     return vector_store
 vector_store = load_vector_store()
@@ -111,7 +119,7 @@ Why? Studies show a **37% efficiency boost** in day to day work activities!""")
 with st.sidebar:
     with st.form('upload'):
         uploaded_file = st.file_uploader('Upload a document for additional context', type=['pdf'])
-        submitted = st.form_submit_button('Save to Astra DB')
+        submitted = st.form_submit_button('Save to DataStax Enterprise v7')
         if submitted:
             vectorize_text(uploaded_file, vector_store)
 
