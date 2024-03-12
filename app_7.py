@@ -105,15 +105,24 @@ if 'messages' not in st.session_state:
     st.session_state.messages = []
 
 # Draw a title and some markdown
-st.title("Your personal Efficiency Booster")
-st.markdown("""Generative AI is considered to bring the next Industrial Revolution.  
-Why? Studies show a **37% efficiency boost** in day to day work activities!""")
+st.markdown("""# Your Enterprise Sidekick 🚀
+Generative AI is considered to bring the next Industrial Revolution.  
+Why? Studies show a **37% efficiency boost** in day to day work activities!
+
+### Security and safety
+This Chatbot is safe to work with sensitive data. Why?
+- First of all it makes use of a local LLM that does not communicate with the internet or a cloud provider,
+- Also the LLM does not contain any sensitive data, as there is no way to secure it in a LLM,
+- Instead, your sensitive data is stored securely within the firewall inside DataStax Enterprise v7 Vector Database,
+- And lastly, the chains are built on RAGStack, an enterprise version of Langchain and LLamaIndex, supported by DataStax.""")
+st.divider()
 
 # Include the upload form for new data to be Vectorized
 with st.sidebar:
+    st.image("https://1000logos.net/wp-content/uploads/2021/05/ING-logo.png", width=250)
     with st.form('upload'):
         uploaded_file = st.file_uploader('Upload a document for additional context', type=['pdf'])
-        submitted = st.form_submit_button('Save to DataStax Enterprise v7')
+        submitted = st.form_submit_button('Save to DataStax Enterprise')
         if submitted:
             vectorize_text(uploaded_file, vector_store)
 
