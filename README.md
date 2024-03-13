@@ -1,6 +1,15 @@
 # Build your own RAG Chatbot
 Welcome to this workshop to build and deploy your own Chatbot using Retrieval Augmented Generation with Astra DB and the OpenAI Chat Model.
 
+## Safety and security 
+This repository focusses on safety and security by keeping your sensitive data within the firewall!
+
+Why?
+- First of all it makes use of a local LLM that does not communicate with the internet or a cloud provider,
+- Also the LLM does not contain any sensitive data, as there is no way to secure it in a LLM,
+- Instead, your sensitive data is stored securely within the firewall inside DataStax Enterprise v7 Vector Database,
+- And lastly, the chains are built on RAGStack, an enterprise version of Langchain and LLamaIndex, supported by DataStax.
+
 It leverages [DataStax RAGStack](https://docs.datastax.com/en/ragstack/docs/index.html), which is a curated stack of the best open-source software for easing implementation of the RAG pattern in production-ready applications that use Astra Vector DB or Apache Cassandra as a vector store.
 
 ![codespace](./assets/chatbot.png)

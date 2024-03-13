@@ -1,6 +1,9 @@
 version: '3.7'
 
 services:
+
+  # DataStax Enterprise with Vector Search
+  # Just one node for prototyping purposes
   seed_node:
     image: "datastax/dse-server:7.0.0-alpha.4"
     environment:
@@ -16,6 +19,7 @@ services:
     ports:
       - 9042:9042
 
+  # Jupyter Notebook
   jupyter:
     image: jupyter/base-notebook:latest
     volumes:
