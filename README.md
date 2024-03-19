@@ -1,81 +1,42 @@
 # Build your own RAG Chatbot
-Welcome to this workshop to build and deploy your own Chatbot using Retrieval Augmented Generation with Astra DB and the OpenAI Chat Model.
+Welcome to this workshop to build and deploy your own Enterprise Co-Pilot using Retrieval Augmented Generation with DataStax Enterprise v7, a local inferencer and Mistral, a local and open Large Language Model.
 
 ## Safety and security 
 This repository focusses on safety and security by keeping your sensitive data within the firewall!
 
 Why?
-- First of all it makes use of a local LLM that does not communicate with the internet or a cloud provider,
-- Also the LLM does not contain any sensitive data, as there is no way to secure it in a LLM,
-- Instead, your sensitive data is stored securely within the firewall inside DataStax Enterprise v7 Vector Database,
-- And lastly, the chains are built on RAGStack, an enterprise version of Langchain and LLamaIndex, supported by DataStax.
+- First of all it makes use of [Ollama, a local inference engine](https://ollama.com);
+- On top of the inference engine, we're running [Mistral, a local and open Large Language Model (LLM)](https://mistral.ai/);
+- Also the LLM does not contain any sensitive or enterprise data, as there is no way to secure it in a LLM;
+- Instead, your sensitive data is stored securely within the firewall inside [DataStax Enterprise v7 Vector Database](https://www.datastax.com/blog/get-started-with-the-datastax-enterprise-7-0-developer-vector-search-preview);
 
-It leverages [DataStax RAGStack](https://docs.datastax.com/en/ragstack/docs/index.html), which is a curated stack of the best open-source software for easing implementation of the RAG pattern in production-ready applications that use Astra Vector DB or Apache Cassandra as a vector store.
+It leverages [DataStax RAGStack](https://docs.datastax.com/en/ragstack/docs/index.html), which is a curated stack of the best open-source software for easing implementation of the RAG pattern in production-ready applications that use DataStax Enterprise, Astra Vector DB or Apache Cassandra as a vector store.
 
 ![codespace](./assets/chatbot.png)
 
 What you'll learn:
 - 🤩 How to leverage [DataStax RAGStack](https://docs.datastax.com/en/ragstack/docs/index.html) for production-ready use of the following components:
-    - 🚀 The [Astra DB Vector Store](https://db.new) for Semantic Similarity search
-    - 🦜🔗 [LangChain](https://www.langchain.com) for linking OpenAI and Astra DB
-- 🤖 How to use [OpenAI's Large Language Models](https://platform.openai.com/docs/models) for Q&A style chatbots
-- 👑 How to use [Streamlit](https://streamlit.io) to easily deploy your awesome app to the internet for everyone to see!
+    - 🚀 The [DataStax Enterprise v7 Vector Database](https://www.datastax.com/blog/get-started-with-the-datastax-enterprise-7-0-developer-vector-search-preview) for Semantic Similarity search
+    - 🦜🔗 [LangChain](https://www.langchain.com) for linking Mistral and DataStax Enterprise
+- 🧠 How to use [Ollama](https://ollama.com) as a local inferencing engine
+- 🤖 How to use [Mistral](https://mistral.ai/) as a local and open Large Language Model (LLM) for Q&A style chatbots
+- 👑 How to use [Streamlit](https://streamlit.io) to easily deploy your awesome app!
 
 - Slides of the presentation can be found [HERE](assets/meetups-slides.pdf)
-
-
 
 ## 1️⃣ Prerequisites
 This workshop assumes you have access to:
 1. [A Github account](https://github.com)
-2. [Google Colab](https://colab.research.google.com/)
+2. A development laptop with an IDE (for instance VSCode)
+3. [Docker](https://www.docker.com/) on your laptop
+4. [Python 3.10+](https://www.python.org/downloads/) on your laptop
 
-During the course, you'll gain access to the following by signing up for free:
-1. [DataStax Astra DB](https://astra.datastax.com) (you can sign up through your Github account)
-2. [OpenAI account](https://platform.openai.com/signup) (you can sign up through your Github account)
-3. [Streamlit](https://streamlit.io) to deploy your amazing app (you can sign up through your Github account)
+In the next steps we'll prepare the repository, DataStax Enterprise, a Jupyter Notebook and the Ollama Inference Engine with Ollama.
 
-Follow the below steps and provide the **Astra DB API Endpoint**, **Astra DB ApplicationToken** and **OpenAI API Key** when required.
+### Clone this tutorial to your development laptop
+First thing, we'll need to clone this repository to your local development laptop.
 
-### Sign up for Astra DB
-Make sure you have a vector-capable Astra database (get one for free at [astra.datastax.com](https://astra.datastax.com))
-- You will be asked to provide the **API Endpoint** which can be found in the right pane underneath *Database details*.
-- Ensure you have an **Application Token** for your database which can be created in the right pane underneath *Database details*.
-
-![codespace](./assets/astra.png)
-
-### Sign up for OpenAI
-- Create an [OpenAI account](https://platform.openai.com/signup) or [sign in](https://platform.openai.com/login).
-- Navigate to the [API key page](https://platform.openai.com/account/api-keys) and create a new **Secret Key**, optionally naming the key.
-
-![codespace](./assets/openai-key.png)
-
-### Sign up for Streamlit
-Follow the steps outlined [here](https://docs.streamlit.io/streamlit-community-cloud/get-started/quickstart).
-
-![codespace](./assets/streamlit.png)
-
-## 2️⃣ First try the concepts in a Colab Notebook
-To kick this workshop off, we'll first try the concepts in a [Colab Notebook](https://colab.research.google.com/drive/1_n-QZyuP898JNaX7RDnCmw9lkibgEuP-).
-
-This notebook shows the steps to take to use the Astra DB Vector Store as a means to make LLM interactions meaningfull and without hallucinations. The approach taken here is Retrieval Augmented Generation.
-
-You'll learn:
-
-1. About the content in a CNN dataset (we'll use the news article about Daniel Radcliffe in this example)
-2. How to interact with the OpenAI Chat Model without providing this context
-3. How to load this context into Astra DB Vector Store
-4. How to run a semantic similarity search on Astra DB Vector Store
-5. How to use this context with the OpenAI Chat Model
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1_n-QZyuP898JNaX7RDnCmw9lkibgEuP-#scrollTo=RUbC-NIgkSR9)
-
-![codespace](./assets/collab.png)
-
-## 3️⃣ Open this tutorial on Github Codespaces
-To make life easier, we'll use the awesome Github Codespace functionality. Github offers you a completely integrated developer experience and resources to get started quickly. How?
-
-1. Open the [build-your-own-rag-agent](https://github.com/michelderu/build-your-own-rag-agent) repository
+1. Open the [build-your-local-ragstack-chatbot](https://github.com/michelderu/build-your-local-ragstack-chatbot) repository
 2. Click on `Use this template`->`Ceate new repository` as follows:
 
     ![codespace](./assets/create-new-repository.png)
@@ -84,17 +45,61 @@ To make life easier, we'll use the awesome Github Codespace functionality. Githu
 
     ![codespace](./assets/repository-name.png)
 
-4. Cool! You just created a copy in your own Gihub account! Now let's get started with coding. Click `Create codespace on main` as follows:
+4. Cool! You just created a copy in your own Gihub account! Now let's clone it to your local development laptop. Open up a fresh termal, `cd` to a sensible directory (like /projects or so), and `git clone <url-to-your-repo>`.
 
-    ![codespace](./assets/create-codespace.png)
+And you're ready to rock and roll! 🥳
 
-And you're ready to rock and roll! 🥳  
-As Codespaces creates your dev environment based on `Python 3.11`, it will automatically install the Python dependecies from `requirements.txt`. So, no need to `pip install` anything here. It will also set up prt forwarding so you can access subsequent Streamlit apps from anywhere.  
-When the codespace start up, it will run a Streamlit Hello World app for you which shows some of the awesome capabilities of this UI framework. When you're done playing, just click `ctrl-c` in the `terminal` to stop running it.
+### Get a Python environment going
+It's useful to create a *Virtual Environment*. Use the below to set it up:
+```
+python3 -m venv myenv
+```
+Then activate it as follows:
+```
+source myenv/bin/activate   # on Linux/Mac
+myenv\Scripts\activate.bat  # on Windows
+```
+Now you can start installing packages:
+```
+pip3 install -r requirements.txt
+```
 
-## 4️⃣ Getting started with Streamlit to build an app
+### Get DataStax Enterprise and Jupyter started as a Docker Container
+Run DSE 7 in any of these two ways from a fresh terminal window:
 
-Let us now build a real application we will use the following architecture
+`docker-compose up`
+
+This uses the docker-compose.yml file in the root of this repository which will also conveniently start the Jupyter Interpreter.
+
+DataStax will be running on http://localhost:9042 and Jupyter will be accesible by browsing to http://localhost:8888
+
+### Start Ollama with Mistral
+There are a multitude of inference engines. You can go for [LM Studio](https://lmstudio.ai/) which has a nice UI. In this notebook, we'll use [Ollama](https://ollama.com/).
+
+1. Get started by [downloading](https://ollama.com/download)
+2. Install it to your machine
+3. Start the inference engine, while downloading Mistral (~4GB) with the command `ollama run mistral` in a fresh terminal window
+
+In case this all fails, because of RAM limitations, you can opt to use [tinyllama](https://ollama.com/library/tinyllama) as a model.
+
+## 2️⃣ Now try the concepts in a Jupyter Notebook
+To kick this workshop off, we'll first try the concepts in the supplied [notebook](jovyan/Build_Your_Own_RAG_Meetup.ipynb).
+
+This notebook shows the steps to take to use the DataStax Enterprise Vector Store as a means to make LLM interactions meaningfull and without hallucinations. The approach taken here is Retrieval Augmented Generation.
+
+You'll learn:
+
+1. About the content in a CNN dataset (we'll use the news article about Daniel Radcliffe in this example)
+2. How to interact with the Mistral Chat Model without providing this context
+3. How to load this context into DataStax Enterprise Vector Store
+4. How to run a semantic similarity search on DataStax Enterprise Vector Store
+5. How to use this context with the Mistral Chat Model
+
+Browse to http://localhost:8888 and open the notebook that's available in the root called `Build_Your_Own_RAG_Meetup.ipnb`.
+
+## 3️⃣ Getting started with Streamlit to build an app
+
+Let us now build a real application which will use the following architecture:
 
 ![steps](./assets/steps.png)
 
@@ -106,13 +111,22 @@ To get started, let's create a *hello world* application as follows:
 import streamlit as st
 
 # Draw a title and some markdown
-st.title("Your personal Efficiency Booster")
-st.markdown("""Generative AI is considered to bring the next Industrial Revolution.  
-Why? Studies show a **37% efficiency boost** in day to day work activities!""")
-```
-The first step is to import the streamlit package. Then we call `st.title` to write a title to the web page and lastly we write some markdown content to the web page using `st.markdown`.
+st.markdown("""# Your Enterprise Co-Pilot 🚀
+Generative AI is considered to bring the next Industrial Revolution.  
+Why? Studies show a **37% efficiency boost** in day to day work activities!
 
-To get this application started locally you'll need to install the streamlit dependency as follows (not needed in Codespaces):
+### Security and safety
+This Chatbot is safe to work with sensitive data. Why?
+- First of all it makes use of [Ollama, a local inference engine](https://ollama.com);
+- On top of the inference engine, we're running [Mistral, a local and open Large Language Model (LLM)](https://mistral.ai/);
+- Also the LLM does not contain any sensitive or enterprise data, as there is no way to secure it in a LLM;
+- Instead, your sensitive data is stored securely within the firewall inside [DataStax Enterprise v7 Vector Database](https://www.datastax.com/blog/get-started-with-the-datastax-enterprise-7-0-developer-vector-search-preview);
+- And lastly, the chains are built on [RAGStack](https://www.datastax.com/products/ragstack), an enterprise version of Langchain and LLamaIndex, supported by [DataStax](https://www.datastax.com/).""")
+st.divider()
+```
+The first step is to import the streamlit package. Then we call `st.markdown` to write a title and lastly we write some content to the web page.
+
+To get this application started locally you'll need to install the streamlit dependency as follows (which should already be done as part of the prerequisites):
 ```bash
 pip install streamlit
 ```
@@ -187,9 +201,9 @@ streamlit run app_3.py
 
 Now add multiple questions and you'll see these are redraw to the screen every time Streamlit reruns. 👍
 
-## 7️⃣ Now for the cool part! Let's integrate with the OpenAI Chat Model 🤖
+## 7️⃣ Now for the cool part! Let's integrate with the Mistral Chat Model 🤖
 
-Here we'll link back to the work we did using the Colab Notebook and integrate the question with a call to the OpenAI Chat Model.
+Here we'll link back to the work we did using the Jupyter Notebook and integrate the question with a call to the Mistral Chat Model.
 
 Remember that Streamlit reruns the code everytime a user interacts? Because of this we'll make use of data and resource caching in Streamlit so that a connection is only set-up once. We'll use `@st.cache_data()` and `@st.cache_resource()` to define caching. `cache_data` is typically used for data structures. `cache_resource` is mostly used for resources like databases.
 
@@ -209,14 +223,15 @@ YOUR ANSWER:"""
     return ChatPromptTemplate.from_messages([("system", template)])
 prompt = load_prompt()
 
-# Cache OpenAI Chat Model for future runs
+# Cache Mistral Chat Model for future runs
 @st.cache_resource()
 def load_chat_model():
-    return ChatOpenAI(
-        temperature=0.3,
-        model='gpt-3.5-turbo',
-        streaming=True,
-        verbose=True
+    # parameters for ollama see: https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.ollama.ChatOllama.html
+    # num_ctx is the context window size
+    return ChatOllama(
+        model="mistral:latest", 
+        num_ctx=18192, 
+        base_url=st.secrets['OLLAMA_ENDPOINT']
     )
 chat_model = load_chat_model()
 ```
@@ -224,7 +239,7 @@ chat_model = load_chat_model()
 Instead of the static answer we used in the previous examples, we'll now switch to calling the Chain:
 
 ```python
-# Generate the answer by calling OpenAI's Chat Model
+# Generate the answer by calling Mistral's Chat Model
 inputs = RunnableMap({
     'question': lambda x: x['question']
 })
@@ -234,16 +249,16 @@ answer = response.content
 ```
 Check out the complete code in [app_4.py](./app_4.py).
 
-Before we continue, we have to provide the `OPENAI_API_KEY` in `./streamlit/secrets.toml`. There is an example provided in `secrets.toml.example`:
+Before we continue, we have to provide the `OLLAMA_ENDPOINT` in `./streamlit/secrets.toml`. There is an example provided in `secrets.toml.example`:
 
 ```toml
-# OpenAI secrets
-OPENAI_API_KEY = "<YOUR-API-KEY>"
+# Ollama/Mistral Endpoint
+OLLAMA_ENDPOINT = "http://localhost:11434"
 ```
 
-To get this application started locally you'll need to install several dependencies as follows (not needed in Codespaces):
+To get this application started locally you'll need to install RAGStack which contains se stable version of LangChain and all dependencies:
 ```bash
-pip install openai tiktoken astrapy langchain langchain_openai langchain-community
+pip install ragstack
 ```
 
 Now run the app:
@@ -251,7 +266,7 @@ Now run the app:
 streamlit run app_4.py
 ```
 
-You can now start your questions-and-answer interaction with the Chatbot. Of course, as there is no integration with the Astra DB Vector Store, there will not be contextualized answers. As there is no streaming built-in yet, please give the agent a bit of time to come up with the complete answer at once.
+You can now start your questions-and-answer interaction with the Chatbot. Of course, as there is no integration with the DataStax Enterprise Vector Store, there will not be contextualized answers. As there is no streaming built-in yet, please give the agent a bit of time to come up with the complete answer at once.
 
 Let's start with the question:
 
@@ -259,32 +274,43 @@ Let's start with the question:
 
 As you will see, you'll receive a very generic answer without the information that is available in the CNN data.
 
-## 8️⃣ Combine with the Astra DB Vector Store for additional context
+## 8️⃣ Combine with the DataStax Enterprise Vector Store for additional context
 
-Now things become really interesting! In this step we'll integrate the Astra DB Vector Store in order to provide context in real-time for the Chat Model. Steps taken to implement Retrieval Augmented Generation:
+Now things become really interesting! In this step we'll integrate the DataStax Enterprise Vector Store in order to provide context in real-time for the Chat Model. Steps taken to implement Retrieval Augmented Generation:
 1. User asks a question
-2. A semantic similarity search is run on the Astra DB Vector Store
+2. A semantic similarity search is run on the DataStax Enterprise Vector Store
 3. The retrieved context is provided to the Prompt for the Chat Model
 4. The Chat Model comes back with an answer, taking into account the retrieved context
 
-We will reuse the data we inserted thanks to the notebook.
+We will reuse the CNN data we inserted thanks to the notebook.
 
 ![data-explorer](./assets/data-explorer.png)
 
-In order to enable this, we first have to set up a connection to the Astra DB Vector Store:
+In order to enable this, we first have to set up a connection to the DataStax Enterprise Vector Store:
 
 ```python
-# Cache the Astra DB Vector Store for future runs
-@st.cache_resource(show_spinner='Connecting to Astra')
-def load_retriever():
-    # Connect to the Vector Store
-    vector_store = AstraDB(
-        embedding=OpenAIEmbeddings(),
-        collection_name="my_store",
-        api_endpoint=st.secrets['ASTRA_API_ENDPOINT'],
-        token=st.secrets['ASTRA_TOKEN']
+# Cache the DataStax Enterprise Vector Store for future runs
+@st.cache_resource(show_spinner='Connecting to Datastax Enterprise v7 with Vector Support')
+def load_vector_store():
+    # Connect to DSE
+    cluster = Cluster(
+        [st.secrets['DSE_ENDPOINT']]
     )
+    session = cluster.connect()
 
+    # Connect to the Vector Store
+    vector_store = Cassandra(
+        session=session,
+        embedding=HuggingFaceEmbeddings(),
+        keyspace=st.secrets['DSE_KEYSPACE'],
+        table_name=st.secrets['DSE_TABLE']
+    )
+    return vector_store
+vector_store = load_vector_store()
+
+# Cache the Retriever for future runs
+@st.cache_resource(show_spinner='Getting retriever')
+def load_retriever():
     # Get the retriever for the Chat Model
     retriever = vector_store.as_retriever(
         search_kwargs={"k": 5}
@@ -296,7 +322,7 @@ retriever = load_retriever()
 The only other thing we need to do is alter the Chain to include a call to the Vector Store:
 
 ```python
-# Generate the answer by calling OpenAI's Chat Model
+# Generate the answer by calling Mistral's Chat Model
 inputs = RunnableMap({
     'context': lambda x: retriever.get_relevant_documents(x['question']),
     'question': lambda x: x['question']
@@ -305,12 +331,13 @@ inputs = RunnableMap({
 
 Check out the complete code in [app_5.py](./app_5.py).
 
-Before we continue, we have to provide the `ASTRA_API_ENDPOINT` and `ASTRA_TOKEN` in `./streamlit/secrets.toml`. There is an example provided in `secrets.toml.example`:
+Before we continue, we have to provide the `DSE_ENDPOINT`, `DSE_KEYSPACE` and `DSE_TABLE` in `./streamlit/secrets.toml`. There is an example provided in `secrets.toml.example`:
 
 ```toml
-# Astra DB secrets
-ASTRA_API_ENDPOINT = "<YOUR-API-ENDPOINT>"
-ASTRA_TOKEN = "<YOUR-TOKEN>"
+# DataStax Enterprise Endpoint
+DSE_ENDPOINT = "localhost"
+DSE_KEYSPACE = "default_keyspace"
+DSE_TABLE = "dse_vector_table"
 ```
 
 And run the app:
@@ -324,7 +351,7 @@ Let's again ask the question:
 
 As you will see, now you'll receive a very contextual answer as the Vector Store provides relevant CNN data to the Chat Model.
 
-## 9️⃣ Finally, let's make this a streaming app
+## 9️⃣ Let's make this a streaming app
 
 How cool would it be to see the answer appear on the screen as it is generated! Well, that's easy.
 
@@ -376,15 +403,15 @@ First we need an upload form which is simple to create with Streamlit:
 with st.sidebar:
     with st.form('upload'):
         uploaded_file = st.file_uploader('Upload a document for additional context', type=['pdf'])
-        submitted = st.form_submit_button('Save to Astra DB')
+        submitted = st.form_submit_button('Save to DataStax Enterprise')
         if submitted:
             vectorize_text(uploaded_file)
 ```
 
-Now we need a function to load the PDF and ingest it into Astra DB while vectorizing the content.
+Now we need a function to load the PDF and ingest it into DataStax Enterprise while vectorizing the content.
 
 ```python
-# Function for Vectorizing uploaded data into Astra DB
+# Function for Vectorizing uploaded data into DataStax Enterprise
 def vectorize_text(uploaded_file, vector_store):
     if uploaded_file is not None:
         
@@ -406,7 +433,7 @@ def vectorize_text(uploaded_file, vector_store):
             chunk_overlap  = 100
         )
 
-        # Vectorize the PDF and load it into the Astra DB Vector Store
+        # Vectorize the PDF and load it into the DataStax Enterprise Vector Store
         pages = text_splitter.split_documents(docs)
         vector_store.add_documents(pages)  
         st.info(f"{len(pages)} pages loaded.")
@@ -414,7 +441,7 @@ def vectorize_text(uploaded_file, vector_store):
 
 Check out the complete code in [app_7.py](./app_7.py).
 
-To get this application started locally you'll need to install the PyPDF dependency as follows (not needed in Codespaces):
+To get this application started locally you'll need to install the PyPDF dependency as follows:
 ```bash
 pip install pypdf
 ```
@@ -427,66 +454,3 @@ streamlit run app_7.py
 Now upload a PDF document (the more the merrier) that is relevant to you and start asking questions about it. You'll see that the answers will be relevant, meaningful and contextual! 🥳 See the magic happen!
 
 ![end-result](./assets/end-result.png)
-
-## 1️⃣1️⃣ Let's deploy this cool stuff to Streamlit cloud!
-In this step we'll deploy your awesome app to the internet so everyone can enjoy your cool work and be amazed!
-
-### Set up your Streamlit account
-If you have not do so before, please set up your account on Streamlit. When you already have an account skip to the next step and deploy the app.
-
-1. Head over to [Streamlit.io](https://streamlit.io) and clikc `Sign up`. Then select `Continue with Github`:
-
-    ![Streamlit](./assets/streamlit-0.png)
-
-2. Log in using your Github credentials:
-
-    ![Streamlit](./assets/streamlit-1.png)
-
-3. Now authorize Streamlit:
-
-    ![Streamlit](./assets/streamlit-2.png)
-
-4. And set up your account:
-
-    ![Streamlit](./assets/streamlit-3.png)
-
-### Deploy your app
-
-On the main screen, when logged in, click `New app`.
-
-1. When this is your first deployment, provide additional permissions:
-
-    ![Streamlit](./assets/streamlit-4.png)
-
-2. Now define your application settings. Use YOUR repository name, and name the Main file path as `app_7.py`. Pick a cool App URL as you'll app will be deployed to that:
-
-    ![Streamlit](./assets/streamlit-5.png)
-
-3. Click on Advanced, select Python 3.11 and copy-paste the contents from your `secrets.toml`.
-
-Click Deploy! Wait for a bit and your app is online for everyone to use!
-
-⛔️ Be aware that this app is public and uses your OpenAI account which will incur cost. You'll want to shield it off by clicking `Settings->Sharing` in the main screen and define the email addresses that are allowed access. In order to enable this, link your Google account.
-
-# Python environments
-In case you want to run all of the above locally, it's useful to create a *Virtual Environment*. Use the below to set it up:
-```
-python3 -m venv myenv
-```
-Then activate it as follows:
-```
-source myenv/bin/activate   # on Linux/Mac
-myenv\Scripts\activate.bat  # on Windows
-```
-Now you can start installing packages:
-```
-pip3 install -r requirements.txt
-```
-In order to check which packages have been installed:
-```
-pip3 freeze
-```
-Which you can save to requirements.txt if you want:
-```
-pip3 freeze > requirements.txt
-```

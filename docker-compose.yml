@@ -15,7 +15,7 @@ services:
     ulimits:
       memlock: -1
     volumes:
-      - ./seed_data:/var/lib/cassandra
+      - ./cassandra:/var/lib/cassandra
     ports:
       - 9042:9042
 
@@ -23,7 +23,7 @@ services:
   jupyter:
     image: jupyter/base-notebook:latest
     volumes:
-      - ./jupyter:/home
+      - ./:/home
     ports:
       - 8888:8888
     container_name: jupyter_notebook

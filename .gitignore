@@ -3,3 +3,10 @@
 /.streamlit/secrets.toml
 /myenv
 /.vscode
+/jovyan/.cache
+/jovyan/.ipynb_checkpoints
+/jovyan/.ipython
+/jovyan/.jupyter
+/jovyan/.local
+/jovyan/.npm
+/cassandra

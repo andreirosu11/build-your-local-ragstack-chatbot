@@ -17,7 +17,7 @@ YOUR ANSWER:"""
     return ChatPromptTemplate.from_messages([("system", template)])
 prompt = load_prompt()
 
-# Cache OpenAI Chat Model for future runs
+# Cache Mistral Chat Model for future runs
 @st.cache_resource()
 def load_chat_model():
     # parameters for ollama see: https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.ollama.ChatOllama.html
@@ -61,7 +61,7 @@ if question := st.chat_input("What's up?"):
     with st.chat_message('human'):
         st.markdown(question)
 
-    # Generate the answer by calling OpenAI's Chat Model
+    # Generate the answer by calling Mistral's Chat Model
     inputs = RunnableMap({
         'question': lambda x: x['question']
     })
