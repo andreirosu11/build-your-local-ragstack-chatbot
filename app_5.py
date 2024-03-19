@@ -1,19 +1,21 @@
-from langchain_openai import OpenAIEmbeddings
-from langchain_openai import ChatOpenAI
-from langchain_community.vectorstores import AstraDB
+import streamlit as st
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.chat_models.ollama import ChatOllama
+from cassandra.cluster import Cluster
+from langchain_community.vectorstores import Cassandra
 from langchain.schema.runnable import RunnableMap
 from langchain.prompts import ChatPromptTemplate
 
 # Cache prompt for future runs
 @st.cache_data()
 def load_prompt():
-    template = """You're a helpful AI assistent tasked to answer the user's questions.
+    template = """You're a helpful AI assistent tasked to answer the user's question.
 You're friendly and you answer extensively with multiple sentences. You prefer to use bulletpoints to summarize.
 
 CONTEXT:
 {context}
 
-QUESTION:
+USER'S QUESTION:
 {question}
 
 YOUR ANSWER:"""
@@ -23,25 +25,37 @@ prompt = load_prompt()
 # Cache OpenAI Chat Model for future runs
 @st.cache_resource()
 def load_chat_model():
-    return ChatOpenAI(
-        temperature=0.3,
-        model='gpt-3.5-turbo',
-        streaming=True,
-        verbose=True
+    # parameters for ollama see: https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.ollama.ChatOllama.html
+    # num_ctx is the context window size
+    return ChatOllama(
+        model="mistral:latest", 
+        num_ctx=18192, 
+        base_url=st.secrets['OLLAMA_ENDPOINT']
     )
 chat_model = load_chat_model()
 
-# Cache the Astra DB Vector Store for future runs
-@st.cache_resource(show_spinner='Connecting to Astra')
-def load_retriever():
-    # Connect to the Vector Store
-    vector_store = AstraDB(
-        embedding=OpenAIEmbeddings(),
-        collection_name="my_store",
-        api_endpoint=st.secrets['ASTRA_API_ENDPOINT'],
-        token=st.secrets['ASTRA_TOKEN']
+# Cache the DataStax Enterprise Vector Store for future runs
+@st.cache_resource(show_spinner='Connecting to Datastax Enterprise v7 with Vector Support')
+def load_vector_store():
+    # Connect to DSE
+    cluster = Cluster(
+        [st.secrets['DSE_ENDPOINT']]
     )
+    session = cluster.connect()
 
+    # Connect to the Vector Store
+    vector_store = Cassandra(
+        session=session,
+        embedding=HuggingFaceEmbeddings(),
+        keyspace=st.secrets['DSE_KEYSPACE'],
+        table_name=st.secrets['DSE_TABLE']
+    )
+    return vector_store
+vector_store = load_vector_store()
+
+# Cache the Retriever for future runs
+@st.cache_resource(show_spinner='Getting retriever')
+def load_retriever():
     # Get the retriever for the Chat Model
     retriever = vector_store.as_retriever(
         search_kwargs={"k": 5}
@@ -54,9 +68,18 @@ if 'messages' not in st.session_state:
     st.session_state.messages = []
 
 # Draw a title and some markdown
-st.title("Your personal Efficiency Booster")
-st.markdown("""Generative AI is considered to bring the next Industrial Revolution.  
-Why? Studies show a **37% efficiency boost** in day to day work activities!""")
+st.markdown("""# Your Enterprise Co-Pilot 🚀
+Generative AI is considered to bring the next Industrial Revolution.  
+Why? Studies show a **37% efficiency boost** in day to day work activities!
+
+### Security and safety
+This Chatbot is safe to work with sensitive data. Why?
+- First of all it makes use of [Ollama, a local inference engine](https://ollama.com);
+- On top of the inference engine, we're running [Mistral, a local and open Large Language Model (LLM)](https://mistral.ai/);
+- Also the LLM does not contain any sensitive or enterprise data, as there is no way to secure it in a LLM;
+- Instead, your sensitive data is stored securely within the firewall inside [DataStax Enterprise v7 Vector Database](https://www.datastax.com/blog/get-started-with-the-datastax-enterprise-7-0-developer-vector-search-preview);
+- And lastly, the chains are built on [RAGStack](https://www.datastax.com/products/ragstack), an enterprise version of Langchain and LLamaIndex, supported by [DataStax](https://www.datastax.com/).""")
+st.divider()
 
 # Draw all messages, both user and bot so far (every time the app reruns)
 for message in st.session_state.messages:

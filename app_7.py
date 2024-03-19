@@ -2,9 +2,9 @@ import streamlit as st
 import os
 import tempfile
 
-from cassandra.cluster import Cluster
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.chat_models.ollama import ChatOllama
+from cassandra.cluster import Cluster
 from langchain_community.vectorstores import Cassandra
 from langchain.schema.runnable import RunnableMap
 from langchain.prompts import ChatPromptTemplate
@@ -58,7 +58,7 @@ You're friendly and you answer extensively with multiple sentences. You prefer t
 CONTEXT:
 {context}
 
-QUESTION:
+USER'S QUESTION:
 {question}
 
 YOUR ANSWER:"""
@@ -105,16 +105,17 @@ if 'messages' not in st.session_state:
     st.session_state.messages = []
 
 # Draw a title and some markdown
-st.markdown("""# Your Enterprise Sidekick 🚀
+st.markdown("""# Your Enterprise Co-Pilot 🚀
 Generative AI is considered to bring the next Industrial Revolution.  
 Why? Studies show a **37% efficiency boost** in day to day work activities!
 
 ### Security and safety
 This Chatbot is safe to work with sensitive data. Why?
-- First of all it makes use of a local LLM that does not communicate with the internet or a cloud provider,
-- Also the LLM does not contain any sensitive data, as there is no way to secure it in a LLM,
-- Instead, your sensitive data is stored securely within the firewall inside DataStax Enterprise v7 Vector Database,
-- And lastly, the chains are built on RAGStack, an enterprise version of Langchain and LLamaIndex, supported by DataStax.""")
+- First of all it makes use of [Ollama, a local inference engine](https://ollama.com);
+- On top of the inference engine, we're running [Mistral, a local and open Large Language Model (LLM)](https://mistral.ai/);
+- Also the LLM does not contain any sensitive or enterprise data, as there is no way to secure it in a LLM;
+- Instead, your sensitive data is stored securely within the firewall inside [DataStax Enterprise v7 Vector Database](https://www.datastax.com/blog/get-started-with-the-datastax-enterprise-7-0-developer-vector-search-preview);
+- And lastly, the chains are built on [RAGStack](https://www.datastax.com/products/ragstack), an enterprise version of Langchain and LLamaIndex, supported by [DataStax](https://www.datastax.com/).""")
 st.divider()
 
 # Include the upload form for new data to be Vectorized
