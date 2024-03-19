@@ -45,7 +45,12 @@ First thing, we'll need to clone this repository to your local development lapto
 
     ![codespace](./assets/repository-name.png)
 
-4. Cool! You just created a copy in your own Gihub account! Now let's clone it to your local development laptop. Open up a fresh termal, `cd` to a sensible directory (like /projects or so), and `git clone <url-to-your-repo>`.
+4. Cool! You just created a copy in your own Gihub account!
+- Now let's clone it to your local development laptop;
+- Open up a fresh termal; 
+- `cd` to a sensible directory (like /projects or so);
+- `git clone <url-to-your-repo>`
+- `cd` to your new directory!
 
 And you're ready to rock and roll! 🥳
 
@@ -59,7 +64,7 @@ Then activate it as follows:
 source myenv/bin/activate   # on Linux/Mac
 myenv\Scripts\activate.bat  # on Windows
 ```
-Now you can start installing packages:
+Now you can start installing the required packages:
 ```
 pip3 install -r requirements.txt
 ```
@@ -83,7 +88,7 @@ There are a multitude of inference engines. You can go for [LM Studio](https://l
 In case this all fails, because of RAM limitations, you can opt to use [tinyllama](https://ollama.com/library/tinyllama) as a model.
 
 ## 2️⃣ Now try the concepts in a Jupyter Notebook
-To kick this workshop off, we'll first try the concepts in the supplied [notebook](jovyan/Build_Your_Own_RAG_Meetup.ipynb).
+To kick this workshop off, we'll first try the concepts in the supplied [notebook](jovyan/Build_Your_Own_RAG_Meetup.ipynb). We're assuming you'll run from within a Jupyter Docker Container, in case you're not, please change the host names from `host.docker.internal` to `localhost`.
 
 This notebook shows the steps to take to use the DataStax Enterprise Vector Store as a means to make LLM interactions meaningfull and without hallucinations. The approach taken here is Retrieval Augmented Generation.
 
@@ -98,11 +103,6 @@ You'll learn:
 Browse to http://localhost:8888 and open the notebook that's available in the root called `Build_Your_Own_RAG_Meetup.ipnb`.
 
 ## 3️⃣ Getting started with Streamlit to build an app
-
-Let us now build a real application which will use the following architecture:
-
-![steps](./assets/steps.png)
-
 In this workshop we'll use Streamlit which is an amazingly simple to use framework to create front-end web applications.
 
 To get started, let's create a *hello world* application as follows:
@@ -256,7 +256,7 @@ Before we continue, we have to provide the `OLLAMA_ENDPOINT` in `./streamlit/sec
 OLLAMA_ENDPOINT = "http://localhost:11434"
 ```
 
-To get this application started locally you'll need to install RAGStack which contains se stable version of LangChain and all dependencies:
+To get this application started locally you'll need to install RAGStack which contains a stable version of LangChain and all dependencies (which should already be done as part of the prerequisites):
 ```bash
 pip install ragstack
 ```
@@ -283,8 +283,6 @@ Now things become really interesting! In this step we'll integrate the DataStax 
 4. The Chat Model comes back with an answer, taking into account the retrieved context
 
 We will reuse the CNN data we inserted thanks to the notebook.
-
-![data-explorer](./assets/data-explorer.png)
 
 In order to enable this, we first have to set up a connection to the DataStax Enterprise Vector Store:
 
@@ -441,7 +439,7 @@ def vectorize_text(uploaded_file, vector_store):
 
 Check out the complete code in [app_7.py](./app_7.py).
 
-To get this application started locally you'll need to install the PyPDF dependency as follows:
+To get this application started locally you'll need to install the PyPDF dependency as follows (which should already be done as part of the prerequisites):
 ```bash
 pip install pypdf
 ```
